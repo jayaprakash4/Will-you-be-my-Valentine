@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Be My Valentine? 💖</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* 🎨 Dreamy Background */
+    .gradient-background {
+      background: linear-gradient(180deg, #ffafcc 0%, #ffc8dd 50%, #ffdde1 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* ❤️ Floating Hearts Animation */
+    .heart {
+      position: absolute;
+      color: #ff4081;
+      font-size: 2.5rem;
+      animation: float 6s infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(-250px); opacity: 0.8; }
+      100% { transform: translateY(-500px); opacity: 0; }
+    }
+
+    /* 🎀 Bouncy Button Effect */
+    .bounce {
+      animation: bounce 2s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+
+    /* ✨ Soft Button Glow */
+    .btn {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* 💞 Hidden Elements */
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body class="gradient-background">
+  <!-- ❤️ Floating Hearts -->
+  <span class="heart" style="left: 10%; animation-duration: 3s;">❤️</span>
+  <span class="heart" style="left: 50%; animation-duration: 5s;">💖</span>
+  <span class="heart" style="left: 90%; animation-duration: 4s;">💕</span>
+
+  <div class="flex flex-col items-center text-center p-6">
+    <img id="imageDisplay" src="./images/image1.gif" alt="Cute kitten with flowers"
+      class="rounded-lg shadow-lg h-[300px] object-cover transition-all duration-300" />
+
+    <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-6">
+      Will you be my Valentine? 🥺💖
+    </h2>
+
+    <div class="flex gap-6 pt-4 items-center" id="responseButtons">
+      <button id="yesButton"
+        class="bounce btn inline-flex items-center justify-center rounded-full text-[22px] font-bold hover:bg-green-400 min-h-[50px] min-w-[120px] px-6 py-3 bg-green-500 text-white transition">
+        Yes 💖
+      </button>
+      <button id="noButton"
+        class="btn inline-flex items-center justify-center rounded-full text-[22px] font-bold transition hover:bg-red-700 h-[50px] min-w-[120px] px-6 py-3 bg-red-500 text-white">
+        No 💔
+      </button>
+    </div>
+  </div>
+
+  <script type="module">
+    import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+
+    /* 🎯 Constants */
+    const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
+    const imageDisplay = document.getElementById('imageDisplay');
+    const valentineQuestion = document.getElementById('valentineQuestion');
+    const responseButtons = document.getElementById('responseButtons');
+
+    /* 🎀 Cute Image List */
+    const imagePaths = [
+      "./images/image2.gif", "./images/image3.gif", "./images/image4.gif", 
+      "./images/image5.gif", "./images/image6.gif", 
+      "./images/image8.gif", "./images/image9.gif", "./images/image10.gif", 
+      "./images/image11.gif", "./images/image12.gif", "./images/image13.gif"
+    ];
+
+    /* 💖 Random Cute Messages */
+    const valentineMessages = [
+      "Will you be my Valentine? 🥺💖", "Be mine forever? 💞✨", "Say yes, pretty please? 😘💕",
+      "You're my sunshine! 🌞💗", "I have a heart just for you! 💝", "Together forever? 🥰💘",
+      "You're the peanut butter to my jelly! 🥜🍓", "I can't imagine life without you! 💖",
+      "You make my heart race! 💓", "Say yes and let's make magic! 🌟💗"
+    ];
+
+    /* 💔 Fun No Button Messages */
+    const noButtonMessages = [
+      "No 💔", "Are you sure? 🥺", "Pookie please 😢", 
+      "Don't do this to me 😭", "You're breaking my heart 💔", "I'm gonna cry... 🥹", 
+      "Please don't leave me 😔", "I thought we were special 😭", "Wait, what did I do? 😟", 
+      "You're my everything 😓", "Nooo! 😭💔", "Please say yes 😭", "Why are you doing this? 🥺💔",
+      "You're crushing my soul 💔", "I can't take this anymore 😢", "I love youuuu 😭💗",
+      "My heart is breaking 💔😭", "You're my sunshine, please! 🌞🥺", "Noooo 😭💘", "I can't handle this 😭"
+    ];
+
+    let noClickCount = 0;
+
+    /* ❌ No Button - Stays Fixed, Changes Text Infinitely */
+    noButton.addEventListener('click', function () {
+      noClickCount++;
+      imageDisplay.src = imagePaths[noClickCount % imagePaths.length]; // Cycles through images
+      noButton.textContent = noButtonMessages[noClickCount % noButtonMessages.length]; // Changes text infinitely
+      valentineQuestion.textContent = valentineMessages[noClickCount % valentineMessages.length]; // New cute message each time
+    });
+
+    /* ✅ Yes Button - Triggers Confetti & Love */
+    yesButton.addEventListener('click', () => {
+      imageDisplay.src = "./images/image7.gif"; // Show image7.gif ONLY when Yes is clicked
+      valentineQuestion.textContent = "Yippee!! You're mine forever! 🥰💞";
+      responseButtons.classList.add('hidden');
+
+      /* 🎉 Confetti Explosion */
+      confetti({
+        particleCount: 300,
+        spread: 150,
+        origin: { y: 0.6 },
+        colors: ['#ff4081', '#ff80ab', '#ff1744']
+      });
+
+      /* ❤️ Release More Floating Hearts */
+      createFloatingHearts(15);
+    });
+
+    /* ❤️ Floating Hearts Effect */
+    function createFloatingHearts(count) {
+      for (let i = 0; i < count; i++) {
+        const heart = document.createElement("span");
+        heart.classList.add("heart");
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        heart.innerHTML = "❤️";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 5000);
+      }
+    }
+  </script>
+</body>
+</html>
